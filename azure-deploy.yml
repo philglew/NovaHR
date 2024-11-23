@@ -1,0 +1,23 @@
+name: Azure Infrastructure Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy-infrastructure:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy Bicep to Azure
+      run: |
+        az deployment group create --resource-group rg-novahr --template-file ./NovaHR.Server/infrastructure.bicep
